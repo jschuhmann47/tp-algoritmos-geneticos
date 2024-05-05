@@ -48,6 +48,15 @@ partidos_clasicos = [
     ("godoy_cruz", "atletico_tucuman"),
 ]
 
+''''
+fixture[i][j][k]:
+i: fecha
+j: partido
+k: 0 y 1 son los equipos local y visitante, 2 es el día del partido
+'''
+
+def cuantos_cumplen(lista, f):
+    return len(list(filter(f, lista)))
 
 def calcular_aptitud(fixture):
     aptitud = 0
@@ -74,32 +83,23 @@ def calcular_aptitud(fixture):
             aptitud += 1
 
     # Restricción: La mitad de los equipos deben jugar 10 partidos de local y 9 de visitante, y viceversa
-    equipos_local = []
-    equipos_visitante = []
-    for fecha in fixture:
-        for partido in fecha:
-            equipos_local.append(partido[0])
-            equipos_visitante.append(partido[1])
-    for equipo in equipos.keys():
-        if equipos_local.count(equipo) != equipos_visitante.count(equipo):
-            aptitud += 1
-
     for equipo in equipos.keys():
         partidos_de_local = 0
         partidos_de_visitante = 0
         for fecha in fixture:
-            partidos_de_local += len(filter(lambda partido: partido[0] == equipo, fecha))
-            partidos_de_visitante += len(filter(lambda partido: partido[1] == equipo, fecha))
+            partidos_de_local += cuantos_cumplen(fecha, lambda partido: partido[0] == equipo)
+            partidos_de_visitante += cuantos_cumplen(fecha, lambda partido: partido[1] == equipo)
         if not (partidos_de_local == 10 and partidos_de_visitante == 9 or partidos_de_local == 9 and partidos_de_visitante == 10):
             aptitud += 1
 
     # Restricción: Los equipos deben alternar de localía fecha tras fecha
-    # AGREGAR ITERAR PARTIDOS DE LA FECHA
     for i in range(len(fixture) - 1):
         for equipo in equipos.keys():
-            if (fixture[i][0][0] == equipo and fixture[i + 1][0][0] == equipo) or (
-                fixture[i][0][1] == equipo and fixture[i + 1][0][1] == equipo
-            ):
+            partidos_de_local = cuantos_cumplen(fixture[i], lambda partido: partido[0] == equipo)
+            partidos_de_visitante = cuantos_cumplen(fixture[i], lambda partido: partido[1] == equipo)
+            partidos_de_local_en_la_siguiente = cuantos_cumplen(fixture[i + 1], lambda partido: partido[0] == equipo)           
+            partidos_de_visitante_en_la_siguiente = cuantos_cumplen(fixture[i + 1], lambda partido: partido[1] == equipo)
+            if (partidos_de_local > 0 and partidos_de_local_en_la_siguiente > 0 or partidos_de_visitante > 0 and partidos_de_visitante_en_la_siguiente > 0):
                 aptitud += 1
 
     # Restricción: Por cada fecha debe haber 2 partidos el viernes, 3 el sábado, 3 el domingo y 2 el lunes
@@ -124,23 +124,26 @@ def calcular_aptitud(fixture):
                     aptitud += 1
 
     # Restricción: El partido entre River y Boca se debe jugar en la fecha 10
-    # NO ES NECESARIO QUE SEA EL 1RO DE LA FECHA
-    if fixture[9][0][0] not in ["river", "boca"] or fixture[9][0][1] not in [
-        "river",
-        "boca",
-    ]:
+    hay_partido_de_river_boca = False
+    for partido in fixture[9]:
+        if partido[0] in ["river", "boca"] and partido[1] in [
+            "river",
+            "boca",
+        ]:
+            hay_partido_de_river_boca = True
+            break
+    if not hay_partido_de_river_boca:
         aptitud += 1
 
-    # Restricción: Los equipos que son clásicos no pueden jugar de local el mismo día
-    # REHACER
+    # Restricción: Los equipos con sus rivales clásicos no pueden jugar de local el mismo día
     for fecha in fixture:
+        locales = [[], [], [], []]
         for partido in fecha:
-            if (partido[0], partido[1]) in partidos_clasicos or (
-                partido[1],
-                partido[0],
-            ) in partidos_clasicos:
-                if partido[0] in equipos_grandes and partido[1] in equipos_grandes:
-                    if partido[2] == dias["domingo"]:
+            locales[dias[partido[2]]].append(partido[0])
+        for locales_dia in locales:
+            for i in range(locales_dia):
+                for j in range(locales_dia[i + 1:]):
+                    if (i, j) in partidos_clasicos or (j, i) in partidos_clasicos:
                         aptitud += 1
 
     # Restricción: Por cada fecha, el día sábado debe haber, como mínimo, un partido que involucre a un equipo grande
@@ -153,13 +156,12 @@ def calcular_aptitud(fixture):
             aptitud += 1
 
     # Restricción: Por cada fecha, el día domingo debe haber, como mínimo, dos partidos que involucren a un equipo grande
-    # HAY MÁS EQUIPOS GRANDES
     equipos_domingo = []
     for fecha in fixture:
         for partido in fecha:
             if partido[2] == dias["domingo"]:
                 equipos_domingo.extend(partido[:2])
-    if equipos_domingo.count("river") + equipos_domingo.count("boca") < 2:
+    if cuantos_cumplen(equipos_domingo, lambda equipo: equipo in equipos_grandes) < 2:
         aptitud += 1
 
     # Restricción: Solo puede haber un partido entre equipos clásicos por fecha
