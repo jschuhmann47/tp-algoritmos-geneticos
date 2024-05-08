@@ -1,0 +1,1 @@
+Framework de AG a utilizar: https://github.com/ahmedfgad/GeneticAlgorithmPython
