@@ -106,8 +106,7 @@ def calcular_aptitud(fixture):
     conteo_dias = {"viernes": 0, "sábado": 0, "domingo": 0, "lunes": 0}
     for fecha in fixture:
         for partido in fecha:
-            dia = [dia for dia, indice in dias.items() if indice == partido[2]][0]
-            conteo_dias[dia] += 1
+            conteo_dias[partido[2]] += 1
         if (
             conteo_dias["viernes"] != 2
             or conteo_dias["sábado"] != 3
@@ -141,8 +140,8 @@ def calcular_aptitud(fixture):
         for partido in fecha:
             locales[dias[partido[2]]].append(partido[0])
         for locales_dia in locales:
-            for i in range(locales_dia):
-                for j in range(locales_dia[i + 1:]):
+            for i in range(len(locales_dia)):
+                for j in range(len(locales_dia[i + 1:])):
                     if (i, j) in partidos_clasicos or (j, i) in partidos_clasicos:
                         aptitud += 1
 

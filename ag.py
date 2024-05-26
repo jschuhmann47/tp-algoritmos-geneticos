@@ -1,9 +1,9 @@
-from cromosoma import generar_cromosoma
+from cromosoma import decodificar_cromosoma, generar_cromosoma
 from fixture import calcular_aptitud
 import pygad
 
 def fitness_func(ga_instance, solution, solution_idx):
-    return calcular_aptitud(solution)
+    return calcular_aptitud(decodificar_cromosoma(solution))
 
 fitness_function = fitness_func
 
@@ -46,15 +46,15 @@ ga_instance = pygad.GA(num_generations=5,
                        on_generation=on_generation,
                        on_stop=on_stop)
 
-ga_instance.run()
+# ga_instance.run()
 
-# ga_instance.plot_fitness()
+# # ga_instance.plot_fitness()
 
-solution, solution_fitness, solution_idx = ga_instance.best_solution(ga_instance.last_generation_fitness)
-print(f"Parameters of the best solution : {solution}")
-print(f"Fitness value of the best solution = {solution_fitness}")
-print(f"Index of the best solution : {solution_idx}")
+# solution, solution_fitness, solution_idx = ga_instance.best_solution(ga_instance.last_generation_fitness)
+# print(f"Parameters of the best solution : {solution}")
+# print(f"Fitness value of the best solution = {solution_fitness}")
+# print(f"Index of the best solution : {solution_idx}")
 
 
-if ga_instance.best_solution_generation != -1:
-    print(f"Best fitness value reached after {ga_instance.best_solution_generation} generations.")
+# if ga_instance.best_solution_generation != -1:
+#     print(f"Best fitness value reached after {ga_instance.best_solution_generation} generations.")
