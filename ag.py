@@ -7,32 +7,14 @@ def fitness_func(ga_instance, solution, solution_idx):
 
 fitness_function = fitness_func
 
-def on_start(ga_instance):
-    pass
-
 def on_fitness(ga_instance, population_fitness):
     print(ga_instance.generations_completed)
-
-def on_parents(ga_instance, selected_parents):
-    pass
-
-def on_crossover(ga_instance, offspring_crossover):
-    pass
-
-def on_mutation(ga_instance, offspring_mutation):
-    pass
-
-def on_generation(ga_instance):
-    pass
-
-def on_stop(ga_instance, last_population_fitness):
-    pass
 
 poblacion_inicial_custom = []
 for i in range(50):
     poblacion_inicial_custom.append(generar_cromosoma())
 
-ga_instance = pygad.GA(num_generations=500,
+ga_instance = pygad.GA(num_generations=5000,
                        num_parents_mating=40,
                        fitness_func=fitness_function,
                        gene_type=int,
@@ -41,13 +23,13 @@ ga_instance = pygad.GA(num_generations=500,
                        parent_selection_type="rws",
                        crossover_probability=0.8,
                        mutation_probability=0.1,
-                       on_start=on_start,
+                    #    on_start=on_start,
                        on_fitness=on_fitness,
-                       on_parents=on_parents,
-                       on_crossover=on_crossover,
-                       on_mutation=on_mutation,
-                       on_generation=on_generation,
-                       on_stop=on_stop,
+                    #    on_parents=on_parents,
+                    #    on_crossover=on_crossover,
+                    #    on_mutation=on_mutation,
+                    #    on_generation=on_generation,
+                    #    on_stop=on_stop,
                        save_best_solutions=True)
 
 ga_instance.run()
