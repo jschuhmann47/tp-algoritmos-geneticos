@@ -48,7 +48,7 @@ partidos_clasicos = [
     ("godoy_cruz", "atletico_tucuman"),
 ]
 
-''''
+'''
 fixture[i][j][k]:
 i: fecha
 j: partido
