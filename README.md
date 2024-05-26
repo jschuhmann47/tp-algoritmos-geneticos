@@ -1,1 +1,3 @@
-Framework de AG a utilizar: https://github.com/ahmedfgad/GeneticAlgorithmPython
+# TP Algoritmos Genéticos
+
+[Framework de AG](https://github.com/ahmedfgad/GeneticAlgorithmPython) a utilizar
