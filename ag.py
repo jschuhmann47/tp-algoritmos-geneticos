@@ -34,6 +34,7 @@ ga_instance = pygad.GA(num_generations=1000,
                     #    on_mutation=on_mutation,
                     #    on_generation=on_generation,
                     #    on_stop=on_stop,
+                       keep_elitism=0,
                        keep_parents=20,
                        crossover_type="uniform",
                        save_best_solutions=True)

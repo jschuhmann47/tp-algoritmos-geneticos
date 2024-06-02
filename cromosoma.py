@@ -4,11 +4,14 @@ from fixture import equipos;
 def generar_cromosoma():
     cromosoma = []
     for _ in range(19):  # 19 fechas
-        # Dentro de una fecha, no hay repetidos (en la población inicial)
-        fecha = list(range(20))
-        random.shuffle(fecha)
+        fecha = []
+        for _ in range(10):  # 10 partidos por fecha
+            equipo_local = random.choice(list(equipos.values()))
+            equipo_visitante = random.choice(list(equipos.values()))
+            partido = (equipo_local, equipo_visitante)
+            fecha.append(partido)
         cromosoma.append(fecha)
-    return sum(cromosoma, []) # Se concatenan los resultados para pasárselos a la lib
+    return sum(sum(cromosoma, []), ()) # Se concatenan los resultados para pasárselos a la lib
 
 def decodificar_cromosoma(cromosoma):
     fixture = []

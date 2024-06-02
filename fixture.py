@@ -82,7 +82,8 @@ def calcular_aptitud(fixture):
         for partido in fecha:
             if partido[0] == partido[1]:
                 aptitud += 1
-
+    
+    # return aptitud
     # Restricción: Todos los equipos deben jugar entre ellos
     for equipo in equipos.keys():
         todos_los_equipos_contra_los_que_jugo = set()
