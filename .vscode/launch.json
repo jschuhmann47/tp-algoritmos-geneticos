@@ -3,7 +3,7 @@
     "configurations": [
         
         {
-            "name": "Run with argument",
+            "name": "Debug",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/ag.py",

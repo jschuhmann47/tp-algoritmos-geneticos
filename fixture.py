@@ -62,13 +62,22 @@ def calcular_aptitud(fixture):
     aptitud = 0
 
     # Restricción: Todos los equipos deben jugar como mínimo y máximo 1 partido por fecha
+    for fecha in fixture:
+        equipos_fecha = {key: [] for key in dias}
+        for partido in fecha:
+            equipos_fecha[partido[2]].extend(list(partido[:2])) 
+        for equipo in equipos.keys():
+            dias_que_juega = []
+            for dia in dias.keys():
+                if equipos_fecha[dia].count(equipo) > 0:
+                    dias_que_juega.append(dia)
+            if len(dias_que_juega) != 1:
+                aptitud += 1
+    
     # Restricción: Un equipo nunca puede jugar contra sí mismo
     for fecha in fixture:
-        equipos_fecha = []
         for partido in fecha:
-            equipos_fecha.extend(partido[:2])
-        for equipo in equipos.keys():
-            if equipos_fecha.count(equipo) != 1:
+            if partido[0] == partido[1]:
                 aptitud += 1
 
     # Restricción: Todos los equipos deben jugar entre ellos
@@ -119,7 +128,7 @@ def calcular_aptitud(fixture):
     for fecha in fixture:
         for partido in fecha:
             if partido[0] in ["river", "boca"] or partido[1] in ["river", "boca"]:
-                if partido[2] != dias["domingo"]:
+                if partido[2] != "domingo":
                     aptitud += 1
 
     # Restricción: El partido entre River y Boca se debe jugar en la fecha 10
@@ -149,7 +158,7 @@ def calcular_aptitud(fixture):
     equipos_sabado = []
     for fecha in fixture:
         for partido in fecha:
-            if partido[2] == dias["sábado"]:
+            if partido[2] == "sábado":
                 equipos_sabado.extend(partido[:2])
         if not any(equipo in equipos_grandes for equipo in equipos_sabado):
             aptitud += 1
@@ -158,7 +167,7 @@ def calcular_aptitud(fixture):
     equipos_domingo = []
     for fecha in fixture:
         for partido in fecha:
-            if partido[2] == dias["domingo"]:
+            if partido[2] == "domingo":
                 equipos_domingo.extend(partido[:2])
     if cuantos_cumplen(equipos_domingo, lambda equipo: equipo in equipos_grandes) < 2:
         aptitud += 1
